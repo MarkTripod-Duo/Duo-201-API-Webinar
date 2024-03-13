@@ -1,0 +1,928 @@
+{
+	"info": {
+		"_postman_id": "187aca5b-b26e-4d64-9973-112ceaa8a7c0",
+		"name": "Duo Auth API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12279134"
+	},
+	"item": [
+		{
+			"name": "API Status Checks",
+			"item": [
+				{
+					"name": "Auth API Ping",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "https://{{apihost}}/auth/v2/ping",
+							"protocol": "https",
+							"host": [
+								"{{apihost}}"
+							],
+							"path": [
+								"auth",
+								"v2",
+								"ping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check API status",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "https://{{apihost}}/auth/v2/check",
+							"protocol": "https",
+							"host": [
+								"{{apihost}}"
+							],
+							"path": [
+								"auth",
+								"v2",
+								"check"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Enrollment",
+			"item": [
+				{
+					"name": "Enroll new user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Activation code is not empty\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.response.activation_code).to.exist.and.to.have.lengthOf.at.least(1, \"Activation code should not be empty\");",
+									"",
+									"    pm.collectionVariables.set(\"activation_code\", responseData.response.activation_code);",
+									"    console.log(\"Activation code: \", responseData.response.activation_code);",
+									"});",
+									"",
+									"pm.test(\"User ID is not empty\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.response.user_id).to.exist.and.to.have.lengthOf.at.least(1, \"User ID should not be empty\");",
+									"",
+									"    pm.collectionVariables.set(\"user_id\", responseData.response.user_id);",
+									"    console.log(\"User ID: \", responseData.response.user_id);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "",
+									"description": "[REQUIRED] The username to enroll. Creates the user in Duo and returns a code (as a QR code) that Duo Mobile can scan with its built-in camera. Scanning the QR code adds the user's account to the app so that they receive and respond to Duo Push login requests.\n\n",
+									"type": "text"
+								},
+								{
+									"key": "valid_secs",
+									"value": "",
+									"description": "Optional: Seconds for which the activation code will remain valid. Default: 86400 (one day).",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "https://{{apihost}}/auth/v2/enroll",
+							"protocol": "https",
+							"host": [
+								"{{apihost}}"
+							],
+							"path": [
+								"auth",
+								"v2",
+								"enroll"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Example Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "",
+											"description": "The username to enroll. Creates the user in Duo and returns a code (as a QR code) that Duo Mobile can scan with its built-in camera. Scanning the QR code adds the user's account to the app so that they receive and respond to Duo Push login requests.\n\n",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "valid_secs",
+											"value": "",
+											"description": "Optional: Seconds for which the activation code will remain valid. Default: 86400 (one day).",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "https://{{apihost}}/auth/v2/enroll",
+									"protocol": "https",
+									"host": [
+										"{{apihost}}"
+									],
+									"path": [
+										"auth",
+										"v2",
+										"enroll"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Duo/1.0"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 20 Oct 2023 16:27:20 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "460"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-store"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "default-src 'self'; frame-src 'self' ; img-src 'self'  ; connect-src 'self'"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"response\": {\n        \"activation_barcode\": \"https://api-267c0646.duosecurity.com/frame/qr?value=duo%3A%2F%2F4FCELXdby5IvBEjBp6BT-YXBpLTI2N2MwNjQ2LmR1b3NlY3VyaXR5LmNvbQ\",\n        \"activation_code\": \"duo://4FCELXdby5IvBEjBp6BT-YXBpLTI2N2MwNjQ2LmR1b3NlY3VyaXR5LmNvbQ\",\n        \"activation_url\": \"https://m-267c0646.duosecurity.com/activate/4FCELXdby5IvBEjBp6BT\",\n        \"expiration\": 1697905640,\n        \"user_id\": \"DUKVGHTEPSSS7I388F7P\",\n        \"username\": \"d8a83e0ab50dc249ce87e24100b7cc80\"\n    },\n    \"stat\": \"OK\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Check Enrollment Status",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://{{apihost}}/auth/v2/enroll_status?activation_code={{activation_code}}&user_id={{user_id}}",
+							"protocol": "https",
+							"host": [
+								"{{apihost}}"
+							],
+							"path": [
+								"auth",
+								"v2",
+								"enroll_status"
+							],
+							"query": [
+								{
+									"key": "activation_code",
+									"value": "{{activation_code}}",
+									"description": "Required: Activation code returned from a call to the /enroll API endpoint."
+								},
+								{
+									"key": "user_id",
+									"value": "{{user_id}}",
+									"description": "Required: ID of user returned from a call to the /enroll API endpoint."
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Asynchronous User Authentication",
+			"item": [
+				{
+					"name": "Pre-auth user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://{{apihost}}/auth/v2/preauth?username=",
+							"protocol": "https",
+							"host": [
+								"{{apihost}}"
+							],
+							"path": [
+								"auth",
+								"v2",
+								"preauth"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "",
+									"description": "Required if username is not given",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "",
+									"description": "Reqquired if user_id is not given"
+								},
+								{
+									"key": "ipaddr",
+									"value": "",
+									"description": "Optional: The IP address of the user to be authenticated, in dotted quad format. This will cause an \"allow\" response to be sent if appropriate for requests from a trusted network.",
+									"disabled": true
+								},
+								{
+									"key": "hostname",
+									"value": "",
+									"description": "Optional: The host name of the device accessing the application.",
+									"disabled": true
+								},
+								{
+									"key": "trusted_device_token",
+									"value": "",
+									"description": "Optional: If the trusted_device_token is present and the Auth API application has an effective policy that enables Remembered Devices for each browser-based application, return an \"allow\" response for the lifetime of the token as set by the Duo administrator in the policy.",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Async Authenticate User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Transaction ID is not empty\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.response.txid).to.exist.and.to.have.lengthOf.at.least(1, \"Transaction ID should not be empty\");",
+									"",
+									"    pm.collectionVariables.set(\"txid\", responseData.response.txid);",
+									"    console.log(\"Transaction ID: \", responseData.response.txid);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "",
+									"description": "Required: Name of user to authenticate.",
+									"type": "text"
+								},
+								{
+									"key": "factor",
+									"value": "auto",
+									"description": "Reqquired: Type of MFA used to authenticate the user. The options are 'auto', 'push', 'passcode', 'sms', phone'. The options are also limited to the types of MFA devices enrolled for a user. The available options are returned from the 'pre_auth' API endpoint.",
+									"type": "text"
+								},
+								{
+									"key": "device",
+									"value": "auto",
+									"type": "text"
+								},
+								{
+									"key": "ipaddr",
+									"value": "",
+									"description": "Optional: IP address of user",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "hostname",
+									"value": "",
+									"description": "Optional: Name of device accessing the application",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "async",
+									"value": "1",
+									"description": "Optional: If set to '1' the response will be a transaction ID (TXID). The TXID is submitted to the auth_status API endpoint to determine the authentication result.\n",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://{{apihost}}/auth/v2/auth",
+							"protocol": "https",
+							"host": [
+								"{{apihost}}"
+							],
+							"path": [
+								"auth",
+								"v2",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Async Auth Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{apihost}}/auth/v2/auth_status?txid={{txid}}",
+							"protocol": "https",
+							"host": [
+								"{{apihost}}"
+							],
+							"path": [
+								"auth",
+								"v2",
+								"auth_status"
+							],
+							"query": [
+								{
+									"key": "txid",
+									"value": "{{txid}}",
+									"description": "[REQUIRED] Transaction ID returned from the async auth user call"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get Logo",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "https://{{apihost}}/auth/v2/logo",
+					"protocol": "https",
+					"host": [
+						"{{apihost}}"
+					],
+					"path": [
+						"auth",
+						"v2",
+						"logo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pre-auth user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "https://{{apihost}}/auth/v2/preauth?username=",
+					"protocol": "https",
+					"host": [
+						"{{apihost}}"
+					],
+					"path": [
+						"auth",
+						"v2",
+						"preauth"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "",
+							"description": "Required if username is not given",
+							"disabled": true
+						},
+						{
+							"key": "username",
+							"value": "",
+							"description": "Reqquired if user_id is not given"
+						},
+						{
+							"key": "ipaddr",
+							"value": "",
+							"description": "Optional: The IP address of the user to be authenticated, in dotted quad format. This will cause an \"allow\" response to be sent if appropriate for requests from a trusted network.",
+							"disabled": true
+						},
+						{
+							"key": "hostname",
+							"value": "",
+							"description": "Optional: The host name of the device accessing the application.",
+							"disabled": true
+						},
+						{
+							"key": "trusted_device_token",
+							"value": "",
+							"description": "Optional: If the trusted_device_token is present and the Auth API application has an effective policy that enables Remembered Devices for each browser-based application, return an \"allow\" response for the lifetime of the token as set by the Duo administrator in the policy.",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authenticate User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "",
+							"description": "Required: Name of user to authenticate.",
+							"type": "text"
+						},
+						{
+							"key": "factor",
+							"value": "auto",
+							"description": "Reqquired: Type of MFA used to authenticate the user. The options are 'auto', 'push', 'passcode', 'sms', phone'. The options are also limited to the types of MFA devices enrolled for a user. The available options are returned from the 'pre_auth' API endpoint.",
+							"type": "text"
+						},
+						{
+							"key": "device",
+							"value": "auto",
+							"type": "text"
+						},
+						{
+							"key": "ipaddr",
+							"value": "",
+							"description": "Optional: IP address of user",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "hostname",
+							"value": "",
+							"description": "Optional: Name of device accessing the application",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "async",
+							"value": "",
+							"description": "Optional: If set to '1' the response will be a transaction ID (TXID). The TXID is submitted to the auth_status API endpoint to determine the authentication result.\n",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "https://{{apihost}}/auth/v2/auth",
+					"protocol": "https",
+					"host": [
+						"{{apihost}}"
+					],
+					"path": [
+						"auth",
+						"v2",
+						"auth"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Duo API Postman Pre-Request script v3.0.2",
+					"// Last updated 2023-09-06 by: Mark Tripod",
+					"",
+					"var URL = require('url');",
+					"",
+					"function writeHeader(text) {",
+					"    var breakStr = '============================================================================';",
+					"    var fullWidth = breakStr.length;",
+					"    var padding = (fullWidth - text.length) / 2;",
+					"    var paddingString = ' '.repeat(padding);",
+					"    var msgStr = paddingString + text + paddingString;",
+					"    console.log(breakStr);",
+					"    console.log(msgStr);",
+					"    console.log(breakStr);",
+					"}",
+					"",
+					"function replacePathVars() {",
+					"    console.log(' *** Entering replacePathVars() ***');",
+					"    var pathIndex = 0;",
+					"    pm.request.url.path.forEach( function(element) {",
+					"        if (element.includes('{{')) {",
+					"            console.log(`    Variable ${element} found in request URL`);",
+					"            var tmpElement = element.replace('{{', '').replace('}}', '');",
+					"            console.log(`    Looking for value assigned to ${tmpElement}`);",
+					"            var newElement = getVar(tmpElement);",
+					"            pm.request.url.path[pathIndex] = newElement;",
+					"            console.log(`    path element ${pathIndex} is now ${pm.request.url.path[pathIndex]}`);",
+					"        }",
+					"        pathIndex += 1;",
+					"    });",
+					"}",
+					"",
+					"function replaceQueryVars() {",
+					"    console.log(' *** Entering replaceQueryVars() ***');",
+					"    for(var i = 0; i < pm.request.url.query.count(); i++) {",
+					"        console.log('.  Query string key: ', pm.request.url.query.idx(i).key);",
+					"        if (pm.request.url.query.idx(i).disabled == true) {",
+					"            console.log('.   Skipping disabled query string parameter', pm.request.url.query.idx(i).key);",
+					"            continue;",
+					"        }",
+					"        if (pm.request.url.query.idx(i).key.includes('{{')) {",
+					"            var tmpElement = pm.request.url.query.idx(i).key;",
+					"            tmpElement = tmpElement.replace('{{', '').replace('}}', '');",
+					"            console.log('.  Looking up replacement string for ', tmpElement);",
+					"            pm.request.url.query.idx(i).key = getVar(tmpElement);",
+					"            console.log('.  New key: ', pm.request.url.query.idx(i).key);",
+					"        }",
+					"        console.log('.  Query string value: ', pm.request.url.query.idx(i).value);",
+					"        if (pm.request.url.query.idx(i).value.includes('{{')) {",
+					"            var tmpElement = pm.request.url.query.idx(i).value;",
+					"            tmpElement = tmpElement.replace('{{', '').replace('}}', '');",
+					"            console.log('.  Looking up replacement string for ', tmpElement);",
+					"            pm.request.url.query.idx(i).value = getVar(tmpElement);",
+					"            console.log('.  New value: ', pm.request.url.query.idx(i).value);",
+					"        }",
+					"    }",
+					"}",
+					"",
+					"function replaceBodyVars() {",
+					"    console.log('  *** Entering replaceBodyVars() ***');",
+					"    pm.request.body.data.forEach(function (bodyElement) {",
+					"        console.log(bodyElement);",
+					"    });",
+					"}",
+					"",
+					"function getVar(varName) {",
+					"    var tmpVar = pm.variables.get(varName);",
+					"    if (!tmpVar) {",
+					"        console.log(`WARNING: ${varName} variable is missing or invalid.`);",
+					"        throw new Error('Please ensure that the ikey, skey, and apihost entries are defined with proper values in either the Postman Environment or Collection variables.');",
+					"    } else {",
+					"        console.log(`  ===> ${varName} value found.`);",
+					"    }",
+					"    return tmpVar;",
+					"}",
+					"",
+					"function getAuthHeader(httpMethod, hostname, path, q_str, requestBody, duo_auth_ver) {",
+					"    writeHeader('Calculating Duo Authentication header');",
+					"",
+					"    console.log('Method: ', httpMethod);",
+					"    console.log('hostname: ', hostname);",
+					"    console.log('Path: ', path);",
+					"    console.log('Query string: ', q_str);",
+					"    console.log('POST body: ', requestBody);",
+					"    console.log('Duo Auth Version: ', duo_auth_ver);",
+					"",
+					"    writeHeader('Retrieving Required Duo API Information');",
+					"",
+					"    var IKEY = getVar('ikey');",
+					"    var SKEY = getVar('skey');",
+					"    var APIHOST = getVar('apihost');",
+					"",
+					"    console.log('   ikey: ', IKEY);",
+					"    console.log('   skey: ************************************');",
+					"    console.log('   apihost: ', APIHOST);",
+					"",
+					"    api_call = path;",
+					"    console.log('.   api_call: ', api_call);",
+					"",
+					"    var AUTH_TYPE;",
+					"    var hmacDigest;",
+					"",
+					"    writeHeader('Calculating Timestamp Header Value');",
+					"",
+					"    //The current time, formatted as RFC 2822. This must be the same string as the \"Date\" header (or X-Duo-Date header).",
+					"    // TODO: explore other options besides the 'moment' module since it is so large and no longer being developed.",
+					"    var moment = require('moment');",
+					"    var timestamp = moment().format(\"ddd, DD MMM YYYY HH:mm:ss ZZ\");",
+					"    pm.variables.set(\"timestampHeader\", timestamp);",
+					"    console.log('timestamp header value: ', timestamp);",
+					"",
+					"    writeHeader('Calculating Duo Authentication Header Value');",
+					"",
+					"    switch (duo_auth_ver) {",
+					"        case 'v2':",
+					"            console.log('API request is for a v1 endpoint. Using HMAC-SHA1 based canonical v2 authentication header.');",
+					"            AUTH_TYPE = 'HMAC-SHA1';",
+					"            var params_unsorted = \"\";",
+					"            var params_array = [];",
+					"            //Create unsorted array of parameters from either URL or Body",
+					"            //Assuming POST parameters are in the Body, GET paramters are in URL",
+					"            //(technically it looks like POST can be in the URL as well)",
+					"            if (Object.keys(requestBody).length !== 0) {",
+					"                for (var parameter1 in requestBody) {",
+					"                    params_unsorted = parameter1 + \"=\" + requestBody[parameter1];",
+					"                    params_array.push(params_unsorted);",
+					"                }",
+					"            } else {",
+					"                params_unsorted = q_str;",
+					"                if (q_str) {",
+					"                    params_array = params_unsorted.split(\"&\");",
+					"                }",
+					"            }",
+					"            console.log('params_array: ', params_array);",
+					"            params_array.sort();                    //lexicographically sort parameters by key",
+					"            var encoded_params = \"\";               ",
+					"            if (params_array[0] !== \"\"){            //check if there are any Params to encode and create the string from",
+					"                var encoded_params_array = params_array.map(urlEncodeParams);   //create URL-encoded array of key=value pairs from the sorted array",
+					"                encoded_params = encoded_params_array.join(\"&\");                //create string of parameters joined by &",
+					"            }",
+					"            console.log('encoded params: ', encoded_params);",
+					"            //Then concatenate these components with (line feed) newlines",
+					"            var requestData =  timestamp+\"\\n\"+httpMethod+\"\\n\"+hostname+\"\\n\"+api_call+\"\\n\"+encoded_params;",
+					"            console.log('requesstData: ', requestData);",
+					"            //compute the HMAC-SHA1 of this canonical representation, using your Duo application's secret key as the HMAC key",
+					"            hmacDigest = CryptoJS.HmacSHA1(requestData, SKEY);",
+					"            console.log('hmacDigest: ', hmacDigest);",
+					"            pm.request.headers.add({key: 'Content-Type', value: 'application/x-www-form-urlencoded' });",
+					"            break;",
+					"        case 'v5':",
+					"            console.log('API request is for a v2 endpoint. Using HMAC-SHA512 based canonical v5 authentication header.');",
+					"            AUTH_TYPE = 'HMAC-SHA512';",
+					"            var body_length = Object.keys(requestBody).length;",
+					"            var encoded_params = \"\";  ",
+					"            var requestData = \"\";",
+					"            ",
+					"            if (body_length != 0) {  ",
+					"                var jsonData = JSON.parse(pm.request.body.toJSON().raw);",
+					"                jsonData = JSON.stringify(jsonData);",
+					"                encoded_params = jsonData;",
+					"                console.log('encoded_params: ', encoded_params);",
+					"                requestData =  timestamp+\"\\n\"+httpMethod+\"\\n\"+hostname+\"\\n\"+api_call+\"\\n\"+ \"\" +\"\\n\"+CryptoJS.SHA512(encoded_params)+\"\\n\"+CryptoJS.SHA512(\"\");",
+					"                pm.request.body = jsonData;",
+					"            }",
+					"            else {",
+					"                params_unsorted = q_str;",
+					"                if (params_unsorted.length > 0) {",
+					"                    params_array = params_unsorted.split(\"&\");",
+					"                    params_array.sort(); ",
+					"                    encoded_params_array = params_array.map(urlEncodeParams);   //create URL-encoded array of key=value pairs from the sorted array",
+					"                    encoded_params = encoded_params_array.join(\"&\");  ",
+					"                }",
+					"                requestData = timestamp+\"\\n\"+httpMethod+\"\\n\"+hostname+\"\\n\"+api_call+\"\\n\"+encoded_params+\"\\n\"+CryptoJS.SHA512(\"\")+\"\\n\"+CryptoJS.SHA512(\"\");",
+					"            }",
+					"             //compute the HMAC-SHA1 of this canonical representation, using your Duo application's secret key as the HMAC key",
+					"            hmacDigest = CryptoJS.HmacSHA512(requestData, SKEY);",
+					"            pm.request.headers.add({key: 'Content-Type', value: 'application/json' });",
+					"            break;",
+					"    }",
+					"          ",
+					"    //Use HTTP Basic Authentication for the request, using your integration key as the username and the HMAC signature as the password.",
+					"    var prebase = IKEY+\":\"+ hmacDigest;",
+					"    console.log('prebase: ', prebase);",
+					"     ",
+					"    //encodes a string in base-64",
+					"    var baseComplete = btoa(prebase);",
+					"    console.log('baseComplete: ', baseComplete);",
+					" ",
+					"    var authHeader = \"Basic \"+ baseComplete;",
+					"    console.log('hmacauthheader: ', authHeader);",
+					"    return authHeader;",
+					"}",
+					"",
+					" ",
+					"function urlEncodeParams(value, index, array) {",
+					"    //split the Key and Value at the first \"=\", URL-encode the Value, and rejoin them with an \"=\"",
+					"    //If the separator in the split() is a regular expression that contains capturing parentheses (), matched results are included in the array",
+					"    return value.split(/=(.+)/)[0] + \"=\" + encodeURIComponent(value.split(/=(.+)/)[1]);",
+					"}",
+					"",
+					"// Begin script execution",
+					"writeHeader('Begin Creation of Duo API Authentication Headers');",
+					"",
+					"console.log('PM request object: ', pm.request);",
+					"console.log('PM request host: ', pm.request.url.host);",
+					"console.log('Request data: ', request.data);",
+					"",
+					"var duo_auth_ver;",
+					"var req_url = request.url;",
+					"console.log('Request URL: ', req_url);",
+					"",
+					"if (pm.request.url.query && pm.request.url.query.count() > 0) {",
+					"    console.log('Request has a query string defined. Checking for any variable definitions...');",
+					"    replaceQueryVars();",
+					"} else {",
+					"    console.log('Request has no query string.');",
+					"}",
+					"",
+					"var q_str = pm.request.url.getQueryString();",
+					"console.log('PM parsed query string: ', q_str);",
+					"var pmQueryStringElements = pm.request.url.query.toObject();",
+					"console.log('PM query string object: ', pmQueryStringElements);",
+					"",
+					"console.log('Query string: ', q_str);",
+					"if (!q_str) {",
+					"    q_str = \"\";",
+					"}",
+					"console.log('q_str length: ', q_str.length);",
+					"var path = pm.request.url.path;",
+					"console.log('postman request path object: ', path);",
+					"console.log('Replacing any variables that may be in the path.')",
+					"replacePathVars();",
+					"path = path.join('/');",
+					"path = '/' + path;",
+					"console.log('Path string: ', path.toString());",
+					"",
+					"if (req_url.includes('/v1/') || (req_url.includes('/auth/v2/'))) {",
+					"    duo_auth_ver = 'v2';",
+					"} else { ",
+					"    duo_auth_ver = 'v5'; ",
+					"}",
+					"console.log('Duo Canonical Authentication Version:', duo_auth_ver);",
+					"",
+					"if (pm.request.url.host[0] == '{{apihost}}') {",
+					"    console.log('Request URL contains {{apihost}} variable. Checking if that value is defined in the Postman Environment.');",
+					"    var hostname = getVar('apihost');",
+					"    pm.request.url.host[0] = hostname;",
+					"}",
+					"",
+					"pm.variables.set(\"hmacAuthHeader\", getAuthHeader(request.method, pm.request.url.host[0], path, q_str, request.data, duo_auth_ver));",
+					"",
+					"pm.request.headers.add({key: 'Date', value: pm.variables.get(\"timestampHeader\")});",
+					"pm.request.headers.add({key: 'Authorization', value: pm.variables.get(\"hmacAuthHeader\")});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "txid",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "activation_code",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
