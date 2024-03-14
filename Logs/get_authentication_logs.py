@@ -5,7 +5,6 @@ Example for extracting authentication logs from Duo Admin API
 import duo_client
 import argparse
 import datetime
-import json
 from pprint import pprint as pp
 
 

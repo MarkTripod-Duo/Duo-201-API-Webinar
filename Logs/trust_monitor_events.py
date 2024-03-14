@@ -6,7 +6,6 @@ import json
 import argparse
 
 from duo_client import Admin
-from pprint import pprint as pp
 
 
 def human_time(seconds: int) -> str:
