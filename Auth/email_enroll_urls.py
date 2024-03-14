@@ -11,15 +11,27 @@ import argparse
 
 def get_arguments() -> argparse.Namespace:
     """Collect command line arguments."""
-    parser = argparse.ArgumentParser()
-    duo_credentials = parser.add_argument_group()
+    parser = argparse.ArgumentParser(
+            prog='email_enroll_urls',
+            description='Example script to enroll users in Duo using the Duo Auth API.',
+            formatter_class=lambda prog: argparse.HelpFormatter(prog, max_help_position=45)
+    )
+    duo_credentials = parser.add_argument_group(
+            title="Required Duo API Credentials",
+            description="All three Duo Auth API integration key (ikey), secret key (skey), and api-hostname (host) "
+                        "arguments required to access the API. ")
     duo_credentials.add_argument("--ikey", "-i", nargs="?", required=True,
                                  help="Duo Auth API Integration key")
     duo_credentials.add_argument("--skey", "-s", nargs="?", required=True,
                                  help="Duo Auth API Secret key")
     duo_credentials.add_argument("--host", nargs="?", required=True,
                                  help="Duo Auth API hostname")
-    exclusive_grp = parser.add_mutually_exclusive_group()
+    users_input_group = parser.add_argument_group(
+            title="Other options",
+            description="Select how the users should be input into the script to enroll"
+    )
+
+    exclusive_grp = users_input_group.add_mutually_exclusive_group()
     exclusive_grp.add_argument(
         "--file",
         "-f",
