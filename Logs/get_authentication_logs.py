@@ -17,7 +17,7 @@ def human_time(seconds: int) -> str:
 
 def get_arguments() -> argparse.Namespace:
     """Collect command line arguments."""
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(formatter_class=lambda prog: argparse.HelpFormatter(prog, max_help_position=80))
     duo_credentials = parser.add_argument_group()
     duo_credentials.add_argument(
         "--ikey", "-i", nargs="?", required=True, help="Duo Auth API Integration key"

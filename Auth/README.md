@@ -16,7 +16,7 @@ using the Duo Auth API.
 ### Usage
 
 ```bash
-usage: email_enroll_urls [-h] --ikey [IKEY] --skey [SKEY] --host [HOST] [--file [FILE] | --user [USER]]
+usage: python3 email_enroll_urls [-h] --ikey [IKEY] --skey [SKEY] --host [HOST] [--file [FILE] | --user [USER]]
 
 Example script to enroll users in Duo using the Duo Auth API.
 
